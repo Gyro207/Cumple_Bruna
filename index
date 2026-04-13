@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feliz Cumpleaños 🎂</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --card: #12121a;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --cream: #f5efe0;
+      --muted: #888899;
+      --border: rgba(201,168,76,0.25);
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    /* Stars background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 40% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 70%, rgba(255,255,255,0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 80% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.45) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 90%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 35% 60%, rgba(255,255,255,0.4) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .envelope-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    /* ── SOBRE ── */
+    .envelope {
+      background: #1a1625;
+      border: 1px solid var(--border);
+      border-radius: 4px 4px 8px 8px;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 60px rgba(201,168,76,0.08), 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .envelope:hover { transform: translateY(-4px); box-shadow: 0 0 80px rgba(201,168,76,0.15), 0 30px 80px rgba(0,0,0,0.7); }
+
+    /* Flap del sobre */
+    .envelope-flap {
+      width: 100%;
+      height: 60px;
+      background: #1e1830;
+      clip-path: polygon(0 0, 50% 100%, 100% 0);
+      position: relative;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 8px;
+    }
+    .envelope-flap .seal {
+      width: 28px; height: 28px;
+      background: radial-gradient(circle, var(--gold-light), var(--gold));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      box-shadow: 0 0 12px rgba(201,168,76,0.5);
+      position: absolute;
+      top: 8px;
+    }
+
+    .envelope-body {
+      padding: 2rem 2.5rem 2.5rem;
+    }
+
+    .envelope-hint {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.8s forwards;
+    }
+
+    /* ── CARTA (oculta al inicio) ── */
+    .card-container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .card-container.open { max-height: 2000px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+    }
+
+    /* Header de la carta */
+    .card-header {
+      background: linear-gradient(135deg, #1c1428 0%, #201535 50%, #1a1225 100%);
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .card-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%);
+    }
+
+    .candles {
+      font-size: 2rem;
+      letter-spacing: 0.3em;
+      margin-bottom: 1rem;
+      animation: flicker 2s ease-in-out infinite alternate;
+      position: relative;
+    }
+    @keyframes flicker {
+      0%   { filter: drop-shadow(0 0 6px rgba(255,180,0,0.6)); }
+      100% { filter: drop-shadow(0 0 14px rgba(255,210,80,0.9)); }
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      color: var(--gold-light);
+      line-height: 1.15;
+      position: relative;
+    }
+    .card-title em {
+      display: block;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .gold-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.2rem auto;
+      max-width: 240px;
+    }
+    .gold-divider span { flex: 1; height: 1px; background: var(--border); }
+    .gold-divider .diamond {
+      width: 6px; height: 6px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* Body de la carta */
+    .card-body {
+      padding: 2rem 2.5rem;
+    }
+
+    .salute {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: var(--gold-light);
+      margin-bottom: 1.2rem;
+    }
+
+    /* ── ÁREA EDITABLE ── */
+    .message-area {
+      color: var(--cream);
+      font-size: 0.95rem;
+      line-height: 1.85;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      border: none;
+      resize: none;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 180px;
+      caret-color: var(--gold);
+      transition: background 0.2s;
+      border-radius: 4px;
+      padding: 0.5rem;
+    }
+    .message-area:focus {
+      background: rgba(255,255,255,0.03);
+      outline: 1px solid var(--border);
+    }
+    .message-area::placeholder { color: var(--muted); font-style: italic; }
+
+    .edit-hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Footer de la carta */
+    .card-footer {
+      padding: 1.25rem 2.5rem 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .signature-area { display: flex; flex-direction: column; gap: 0.3rem; }
+    .signature-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .signature-input {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      outline: none;
+      width: 180px;
+      caret-color: var(--gold);
+      padding-bottom: 4px;
+      transition: border-color 0.2s;
+    }
+    .signature-input:focus { border-color: var(--gold); }
+
+    .date-area { text-align: right; }
+    .date-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .date-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* Confetti badge */
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.78rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+    }
+
+    /* Partículas / confetti animado */
+    .particles {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      display: none;
+    }
+    .particles.active { display: block; }
+    .particle {
+      position: absolute;
+      top: -10px;
+      width: 8px; height: 8px;
+      border-radius: 2px;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+      80%  { opacity: 0.8; }
+      100% { transform: translateY(105vh) rotate(720deg) scale(0.5); opacity: 0; }
+    }
+
+    /* Botón principal */
+    .open-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      padding: 0.9rem 1.5rem;
+      background: linear-gradient(135deg, var(--gold) 0%, #a07830 100%);
+      color: #0a0a0f;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      margin-top: 0.75rem;
+    }
+    .open-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .open-btn:active { transform: translateY(0); }
+    .open-btn.hidden { display: none; }
+
+    /* Footer externo */
+    .outer-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      animation: fadeIn 1s ease 1s forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card { animation: slideDown 0.6s ease; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .card-title { font-size: 1.8rem; }
+      .card-body, .card-footer { padding: 1.5rem; }
+      .envelope-body { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="envelope-wrapper">
+  <div class="envelope">
+    <div class="envelope-flap">
+      <div class="seal">🕯️</div>
+    </div>
+    <div class="envelope-body">
+      <p class="envelope-hint">✦ Una carta te espera ✦</p>
+
+      <!-- Carta colapsada -->
+      <div class="card-container" id="cardContainer">
+        <div class="card">
+
+          <!-- Header -->
+          <div class="card-header">
+            <div class="candles">🕯️ 🎂 🕯️</div>
+            <div class="gold-divider"><span></span><div class="diamond"></div><span></span></div>
+            <h1 class="card-title">
+              <em>feliz, feliz</em>
+              Cumpleaños
+            </h1>
+            <div class="gold-divider"><span></span><div class="diamond"></div><span></span></div>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body">
+            <p class="salute">Feliz Cumpleaños Bruna</p>
+            <p class="edit-hint">✏️ Haz clic aquí para escribir tu mensaje</p>
+            <textarea
+              class="message-area"
+              id="messageArea"
+              placeholder="Querida Bruna,
+
+Feliz cumpleaños.
+
+Hoy es tu día, y aunque el tiempo haya pasado y las cosas hayan cambiado tanto, hay fechas que siguen teniendo un brillo especial… y la tuya siempre va a ser una de esas para mí. No podía dejar que este día pasara sin escribirte, sin hacerte llegar algo que viniera desde lo más profundo y sincero que tengo.
+
+Espero de corazón que te haya gustado el regalo.
+El anillo… los girasoles… no están ahí por casualidad. Son recuerdos vivos, son promesas que alguna vez dijimos, son detalles que el tiempo no pudo borrar en mí. Es mi forma de demostrarte que hay cosas que, por más que todo cambie, siguen teniendo un significado enorme.
+
+No sé si vos recordás todo como yo…
+pero yo no pude olvidar.
+
+Durante mucho tiempo te esperé.
+Y no lo digo desde el orgullo ni desde la tristeza… lo digo porque es la verdad más honesta que tengo.
+
+Hubo días en los que no sabía qué hacer conmigo mismo, momentos en los que todo seguía avanzando menos yo. Mientras el mundo giraba, yo me quedaba sosteniendo recuerdos, pensando en vos, en lo que fuimos, en lo que pudo haber sido.
+
+No siempre fui fuerte.
+A veces ni siquiera fui claro conmigo mismo.
+
+Pero hubo algo que nunca cambió: lo que sentía por vos.
+
+Fuiste lo más importante que tuve.
+Y no es una frase linda… es algo que me marcó de verdad.
+
+Por vos quise ser mejor.
+Por vos aprendí a sentir de una forma que no conocía.
+Por vos entendí que amar a alguien puede transformarte por completo.
+
+Y aunque tal vez llegué tarde… aunque tal vez no supe hacerlo bien en su momento… lo que sentí siempre fue real.
+
+Y lo sigue siendo.
+
+No sé en qué lugar estoy hoy en tu vida.
+Y aunque no lo digas, hay cosas que uno siente igual.
+
+Puede que ya no me veas de la misma forma,
+puede que tu corazón esté en otro lugar…
+
+Pero lo que hay en mí no depende de eso.
+
+Te extraño.
+
+Extraño lo que éramos, lo que compartíamos, la forma en la que todo parecía más simple cuando estabas cerca. Extraño hablar con vos sin pensar, reírme sin medir nada, sentir que todo tenía sentido.
+
+Y aunque el tiempo haya pasado, hay cosas que en mí no cambiaron.
+
+Sigo sintiendo algo por vos.
+Algo que no supe soltar del todo, algo que se quedó incluso cuando intenté seguir adelante.
+
+Tal vez vos ya te volviste a enamorar…
+tal vez la vida te llevó por otros caminos…
+
+Y aunque duela, hay una parte de mí que simplemente sigue estando ahí, sin condiciones, sin pedir nada, sin saber irse del todo.
+
+Es un cariño que no desaparece,
+un sentimiento que no depende del tiempo,
+una forma de quererte que no necesita explicación.
+
+No es perfecto…
+pero es real.
+
+Y hoy, en tu cumpleaños, no quería esconderlo.
+
+Hoy solo quería que supieras que, en medio de todo,
+hubo alguien que te quiso de verdad,
+y que todavía guarda eso con mucho valor.
+
+Feliz cumpleaños, Bruna.
+
+De verdad.
+
+Ojalá este nuevo año te encuentre en paz,
+rodeada de cosas buenas,
+y con motivos para seguir sonriendo.
+
+Ojalá te pasen cosas lindas,
+que la vida te sorprenda para bien,
+y que nunca te falte alguien que te haga sentir especial, como vos hacías sin darte cuenta.
+
+Gracias por todo lo que fuiste en mi vida,
+por todo lo que me hiciste sentir,
+y por todo lo que, de alguna forma, todavía vive en mí.
+
+"></textarea>
+
+            <div class="badge-row">
+              <span class="badge">✨ Que la pases increíble</span>
+              <span class="badge">🥂 Brindemos (en espíritu)</span>
+              <span class="badge">🎈 Un año más de gloria</span>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="card-footer">
+            <div class="signature-area">
+              <span class="signature-label">Con cariño,</span>
+              <input
+                type="text"
+                class="signature-input"
+                id="signatureInput"
+                placeholder="Lucas"
+                value=""
+              />
+            </div>
+            <div class="date-area">
+              <p class="date-label">Fecha</p>
+              <p class="date-value" id="dateValue"></p>
+            </div>
+          </div>
+
+        </div><!-- /.card -->
+      </div><!-- /.card-container -->
+
+      <!-- Botón abrir -->
+      <button class="open-btn" id="openBtn" onclick="openCard()">
+        🎁 &nbsp; Abrir carta
+      </button>
+
+    </div><!-- /.envelope-body -->
+  </div><!-- /.envelope -->
+
+  <p class="outer-footer">Hecho con un poco de nostalgia y mucho estilo ✦</p>
+</div>
+
+<script>
+  // Fecha actual en español
+  const fecha = new Date();
+  const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('dateValue').textContent =
+    fecha.toLocaleDateString('es-ES', opciones);
+
+  // Abrir carta
+  function openCard() {
+    const btn = document.getElementById('openBtn');
+    const card = document.getElementById('cardContainer');
+    btn.classList.add('hidden');
+    card.classList.add('open');
+    launchConfetti();
+    setTimeout(() => {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 400);
+  }
+
+  // Confetti dorado
+  function launchConfetti() {
+    const container = document.getElementById('particles');
+    container.classList.add('active');
+    const colors = ['#c9a84c','#e8c97a','#fff0b0','#a07830','#f5efe0','#d4af60'];
+
+    for (let i = 0; i < 80; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.width = (Math.random() * 8 + 4) + 'px';
+      p.style.height = (Math.random() * 8 + 4) + 'px';
+      p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      p.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      p.style.animationDelay = (Math.random() * 1.5) + 's';
+      container.appendChild(p);
+    }
+
+    setTimeout(() => {
+      container.classList.remove('active');
+      container.innerHTML = '';
+    }, 5000);
+  }
+
+  // Auto-resize textarea
+  const ta = document.getElementById('messageArea');
+  ta.addEventListener('input', () => {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  });
+</script>
+</body>
+</html>
